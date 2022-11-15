@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="estilos.css" type="text/css">
+    <title>Listado</title>
+  </head>
+
+
+  <script src="https://unpkg.com/phosphor-icons"></script>
+
+  <!-- Funcion de get -->
+  <script>
+    fetch("https://testimonialapi.toolcarton.com/api")
+      .then(function (response) {
+        console.log(response);
+        return response.json();
+      })
+      .then(function (response) {
+        var divOut = document.getElementById("txtOut");
+        var reseñas = response;
+        for (var k in reseñas) {
+          txtOut += 
+          `<div class="card">
+            <div class="datos">
+            <img src="${reseñas[k].avatar}" alt="Avatar" style="border-radius: 50%; height:70px; width:70px" />
+            <div style="padding: 15px">
+              <h3 style="margin: 0px"><b>${reseñas[k].name}</b></h3>
+              <p style="margin: 0px"><i class="ph-map-pin-fill" style="margin-right: 5px"></i>${reseñas[k].location}</p>
+              </div>
+            </div>
+            <div class="container">
+              <p>${reseñas[k].message}</p>
+              <p>Rating: <b>${reseñas[k].rating}</b></p>
+            </div>
+          </div>`;
+        }
+
+        divOut.innerHTML = txtOut;
+      });
+  </script>
+
+
+
+  <body>
+    <!-- Contenido, cards y boton -->
+    <div class="caja" id="txtOut"></div>
+    <br />
+    <a
+      id="myBtn"
+      style="color: purple; font-size: 50px; float: right; padding: 15px;"
+      class="ph-plus-circle-fill"
+    ></a>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+      <!-- Contenido modal -->
+      <div class="modal-content" style="font-family: Arial;">
+        <span class="close">&times;</span>
+        <form id="form" >
+          <ul>
+            <li>
+              <label for="name">Name <span style="color: red;">*</span></label>
+              <input type="text" id="name" name="name" required />
+            </li>
+            <li>
+              <label for="location">Location <span style="color: red;">*</span></label>
+              <input type="text" id="location" name="location" required />
+            </li>
+            <li>
+                <label for="rating">Rating <span style="color: red;">*</span></label>
+                <input type="number" id="rating" name="rating" required />
+              </li>
+            <li>
+              <label for="message">Testimonial <span style="color: red;">*</span></label>
+              <textarea id="message" name="message" required></textarea>
+            </li>
+            <li style="text-align: end; padding-top: 9px;">
+              <button style="border-radius: 5px; border-color: transparent; font-size: 16px; margin-right: 10px; cursor: pointer;" id="cancelar">Cancel</button>
+              <button style="border-radius: 5px; border-color: transparent; background-color: blueviolet; color: white; font-size: 16px; cursor: pointer;" type="submit">Add</button>
+            </li>
+          </ul>
+        </form>
+    </div>
+    </div>
+
+
+  </body>
+
+<!-- Script de post -->
+
+  <script>
+    const form = document.querySelector('#form');
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const name = document.querySelector('#name');
+        const location = document.querySelector('#location');
+        const rating = document.querySelector('#rating')
+        const message = document.querySelector('#message');
+        const avatar = "https://testimonialapi.toolcarton.com/avatar/10.jpg";
+        const designation = "Designer";
+        const lorem = "Lorem ipsum dolor sit amet";
+        const audio = "https://testimonialapi.toolcarton.com/audio/10.mp3";
+
+        const fd = new FormData();
+        fd.append('name', name.value);
+        fd.append('location', location.value);
+        fd.append('rating', rating.value);
+        fd.append('message', message.value);
+        fd.append('avatar', avatar.value);
+        fd.append('designation', designation.value);
+        fd.append('lorem', lorem.value);
+        fd.append('audio', audio.value);
+
+
+        fetch('https://testimonialapi.toolcarton.com/api/', {
+            method: 'POST',
+            mode: 'no-cors',
+            body: fd
+        }).then(res => res.json())
+            .then(json => console.log(json))
+            .catch(err => console.error(err));
+});
+    </script>
+
+  
+
+<!-- Script del Modal -->
+  <script>
+    var modal = document.getElementById("myModal");
+
+    var btn = document.getElementById("myBtn");
+
+    var span = document.getElementsByClassName("close")[0];
+
+    btn.onclick = function () {
+      modal.style.display = "block";
+    };
+    span.onclick = function () {
+      modal.style.display = "none";
+    };
+    document.getElementById("cancelar").onclick = function () {
+        modal.style.display = "none";
+    }
+    window.onclick = function (event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    };
+  </script>
+
+
+  
+</html>
